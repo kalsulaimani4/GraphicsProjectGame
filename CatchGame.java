@@ -13,6 +13,7 @@ public class CatchGame extends JFrame {
     private static final int FRAME_HEIGHT = 800; // frame-height
 
     public CatchGame() {
+
         setLayout(new BorderLayout()); // layout of frame
         setSize(FRAME_WIDTH, FRAME_HEIGHT);// set width & height of frame
         setTitle("The Game");//title of the project
@@ -35,15 +36,19 @@ class DrawingPanel extends JPanel implements Runnable {
     private static int PANEL_HEIGHT; // panel height
     private static final int SW = 50;// square width
     private static final int SH = 50;// square hight
+
     Thread mythread;//
+
     int NumOfSqr = 5;//number of square
     Rectangle sqr[] = new Rectangle[NumOfSqr];//to make a square
     int xmovement[] = new int[NumOfSqr];//to make it move along x axis
     int ymovement[] = new int[NumOfSqr];//to make it move along y axis
     int x[] = new int[NumOfSqr];//to make it move randomly along x axis
     int y[] = new int[NumOfSqr];//to make it move randomly along y axis
+
     private static final int polyW = 60;  //polygon-width
     private static final int polyH = 100; //polygon-height
+
     //(x,y) coordinate of points to be use in polygon	
     private static int x0 = 150;
     private static int y0 = 600;
@@ -53,14 +58,17 @@ class DrawingPanel extends JPanel implements Runnable {
     private static int y2 = y0 - polyH;
     private static int xPoly[] = {x0, x1, x2};//initialize array
     private static int yPoly[] = {y0, y1, y2};//initialize array
+
     public int Xline[] = new int[100];//to draw a line in x axis
     public int Yline[] = new int[100];//to draw a line in y axis
     public int counter = 0;//to count the dot in the panal
+
     private static int tx = 10;// tranlsation distances along x-axis
     private static int ty = tx;// tranlsation distances along y-axis
     // constrctor to setup basic configurations of the panal
 
     public DrawingPanel(int FRAME_WIDTH, int FRAME_HEIGHT) {
+
         PANEL_WIDTH = FRAME_WIDTH;//frame width
         PANEL_HEIGHT = FRAME_HEIGHT;//frame height
         setLayout(new BorderLayout());//
@@ -69,16 +77,20 @@ class DrawingPanel extends JPanel implements Runnable {
         mythread = new Thread(this);
         mythread.start();
         this.setFocusable(true);//if there is multi task with same function
+
         // register keyboard listener
         KeyPressListener listenerKey = new KeyPressListener();
         addKeyListener(listenerKey);
+
         // assgine the intial random corrdiantes for when the square will spawn
         for (int i = 0; i < NumOfSqr; i++) {
             x[i] = (int) (Math.random() * (PANEL_WIDTH - SW));// max random so they stay within the panal
             y[i] = (int) (Math.random() * (PANEL_WIDTH - SW));// max random so they stay within the panal
-            // giving eatch one random movment so they have diffrent animation speed with max speed 50
-            xmovement[i] = (int) (Math.random() * 20);
-            ymovement[i] = (int) (Math.random() * 20);
+
+            // giving eatch one random movment so they have diffrent animation speed with max speed 20 
+            // and min speed 1 so we dont make the shape stop from the start 
+            xmovement[i] = (int) (Math.random() * 20) + 1;
+            ymovement[i] = (int) (Math.random() * 20) + 1;
         }
     }
 
@@ -112,7 +124,7 @@ class DrawingPanel extends JPanel implements Runnable {
         }
         g2.setColor(Color.red);//to set the color of square after touch the polygon
         for (int i = 0; i < NumOfSqr; i++) {
-            if (xmovement[i] == 0 && ymovement[i] == 0) {//to solve some problem
+            if (xmovement[i] == 0 && ymovement[i] == 0) {// if movment is 0 means we have to chanenge its color to red becuse it stopped 
                 g2.fill(sqr[i]);//to fill the square with color
             }
         }
@@ -170,7 +182,7 @@ class DrawingPanel extends JPanel implements Runnable {
                 Yline[(counter) % 100] = yPoly[2];
                 counter++;
             }
-            repaint();
+            repaint();// repainting shapes after changes 
         }
     }
 
