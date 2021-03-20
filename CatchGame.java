@@ -31,7 +31,7 @@ class DrawingPanel extends JPanel implements Runnable {
     private static final int RH = 50;
     //int x, y;
     Thread mythread;
-    int NumOfRect = 5;
+    int NumOfRect = 5;//number of rectangle
     Rectangle rec[] = new Rectangle[NumOfRect];
     int xmovement[] = new int[NumOfRect];
     int ymovement[] = new int[NumOfRect];
@@ -72,7 +72,7 @@ class DrawingPanel extends JPanel implements Runnable {
             x[i] = (int) (Math.random() * (PANEL_WIDTH - RW));// max random so they stay within the panal
             y[i] = (int) (Math.random() * (PANEL_WIDTH - RW));// max random so they stay within the panal
             // giving eatch one random movment so they have diffrent animation speed with max speed 50
-            xmovement[i] = (int) (1+Math.random() * 20);
+            xmovement[i] = (int) (Math.random() * 20);
             ymovement[i] = (int) (Math.random() * 20);
         }
     }
@@ -121,7 +121,7 @@ class DrawingPanel extends JPanel implements Runnable {
             for (int i = 0; i < NumOfRect; i++) {
                 x[i] = x[i] + xmovement[i];
                 y[i] = y[i] + ymovement[i];
-                // if shape his edege of x axis and needs to bounce back
+                // if shape hits edege of x axis and needs to bounce back
                 if (x[i] > PANEL_WIDTH - RW || x[i] < 0) {
                     xmovement[i] = -xmovement[i];
                 }
