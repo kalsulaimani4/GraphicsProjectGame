@@ -36,6 +36,7 @@ class DrawingPanel extends JPanel implements Runnable {
     private static int PANEL_HEIGHT; // panel height
     private static final int SW = 50;// square width
     private static final int SH = 50;// square hight
+    private static int DM = 50;     // used for messge panal thats at the up
 
     Thread mythread;
 
@@ -79,7 +80,6 @@ class DrawingPanel extends JPanel implements Runnable {
         PANEL_WIDTH = FRAME_WIDTH;//frame width
         PANEL_HEIGHT = FRAME_HEIGHT;//frame height
 
-        int DM = 50;
         setLayout(new BorderLayout());//
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - DM)); // set width & height of panel
         this.setBackground(Color.black);//set the color of the panal
@@ -87,6 +87,7 @@ class DrawingPanel extends JPanel implements Runnable {
         msgPanal.setLayout(new FlowLayout());
         msgPanal.setPreferredSize(new Dimension(PANEL_WIDTH, DM));
         msgPanal.add(msgTextFild);
+        msgPanal.setBackground(Color.BLACK);
         add(msgPanal, BorderLayout.NORTH);
 
         mythread = new Thread(this);
