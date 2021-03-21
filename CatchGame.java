@@ -48,6 +48,8 @@ class DrawingPanel extends JPanel implements Runnable {
 
     int countsHitSqrs = 0; // to count how many shaps have been hit so when it reaches number of squars we print win messge
     boolean[] hitOrNot = new boolean[NumOfSqr]; // will change to true when shape at that index gets hit
+    boolean[] visted = new boolean[NumOfSqr]; // will tell us if we visted a index or not so we dont count the same elemtn more then once 
+
     private static String msg = "You WON !!!!!! "; // this messge will be shown when all shapes have been hit
     private JPanel msgPanal = new JPanel();
     private JTextField msgTextFild = new JTextField(50);
@@ -100,6 +102,9 @@ class DrawingPanel extends JPanel implements Runnable {
             // and min speed 1 so we dont make the shape stop from the start 
             xmovement[i] = (int) (Math.random() * 20) + 1;
             ymovement[i] = (int) (Math.random() * 20) + 1;
+
+            hitOrNot[i] = false;
+            visted[i] = false;
         }
     }
 
@@ -154,12 +159,13 @@ class DrawingPanel extends JPanel implements Runnable {
         }
 
         for (int i = 0; i < hitOrNot.length; i++) {
-            if (hitOrNot[i] == true) {
+            if (hitOrNot[i] == true && visted[i] == false) {
                 countsHitSqrs++;
+                visted[i] = true;
             }
         }
 
-        if (countsHitSqrs == NumOfSqr - 1) {
+        if (countsHitSqrs == NumOfSqr) {
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g2.drawString(msg, 100, 140);
         }
@@ -219,7 +225,7 @@ class DrawingPanel extends JPanel implements Runnable {
                 counter++;
             }
 
-            msgTextFild.setText("shapes hit so far : " + countsHitSqrs + "/" + (NumOfSqr - 1));
+            msgTextFild.setText("shapes hit so far : " + countsHitSqrs + "/" + NumOfSqr);
 
             repaint();// repainting shapes after changes 
         }
