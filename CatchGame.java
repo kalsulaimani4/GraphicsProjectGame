@@ -76,14 +76,18 @@ class DrawingPanel extends JPanel implements Runnable {
     // constrctor to setup basic configurations of the panal
 
     public DrawingPanel(int FRAME_WIDTH, int FRAME_HEIGHT) {
-        int DM = 50;
         PANEL_WIDTH = FRAME_WIDTH;//frame width
         PANEL_HEIGHT = FRAME_HEIGHT;//frame height
-        msgPanal.setLayout(new FlowLayout());
 
+        int DM = 50;
         setLayout(new BorderLayout());//
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - DM)); // set width & height of panel
         this.setBackground(Color.black);//set the color of the panal
+
+        msgPanal.setLayout(new FlowLayout());
+        msgPanal.setPreferredSize(new Dimension(PANEL_WIDTH, DM));
+        msgPanal.add(msgTextFild);
+        add(msgPanal, BorderLayout.NORTH);
 
         mythread = new Thread(this);
         mythread.start();
@@ -103,6 +107,7 @@ class DrawingPanel extends JPanel implements Runnable {
             xmovement[i] = (int) (Math.random() * 20) + 1;
             ymovement[i] = (int) (Math.random() * 20) + 1;
 
+            // setting both arrays to false as we havnt visted or hit any shapes yet
             hitOrNot[i] = false;
             visted[i] = false;
         }
@@ -119,11 +124,6 @@ class DrawingPanel extends JPanel implements Runnable {
         g2.setColor(Color.blue);//to set the color of polygon
 
         g.setFont(new Font("Arial", Font.BOLD, 40));// set font for win messge 
-
-        msgPanal.setLayout(new FlowLayout());
-        msgPanal.add(msgTextFild);
-        msgPanal.setBackground(Color.black);
-        add(msgPanal, BorderLayout.NORTH);
 
         g2.fill(polyShape);//to fill the shape with color
 
@@ -159,9 +159,9 @@ class DrawingPanel extends JPanel implements Runnable {
         }
 
         for (int i = 0; i < hitOrNot.length; i++) {
-            if (hitOrNot[i] == true && visted[i] == false) {
-                countsHitSqrs++;
-                visted[i] = true;
+            if (hitOrNot[i] == true && visted[i] == false) {// if we hit a squre and havent visted it before enter
+                countsHitSqrs++;// incerment counter
+                visted[i] = true;// set to true as we visted it so we cant vist it again 
             }
         }
 
@@ -225,7 +225,7 @@ class DrawingPanel extends JPanel implements Runnable {
                 counter++;
             }
 
-            msgTextFild.setText("shapes hit so far : " + countsHitSqrs + "/" + NumOfSqr);
+            msgTextFild.setText("shapes hit so far : " + countsHitSqrs + "/" + NumOfSqr); // to print how many shapes we have hit so far 
 
             repaint();// repainting shapes after changes 
         }
