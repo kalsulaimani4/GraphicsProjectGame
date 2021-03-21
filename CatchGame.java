@@ -37,7 +37,7 @@ class DrawingPanel extends JPanel implements Runnable {
     private static final int SW = 50;// square width
     private static final int SH = 50;// square hight
 
-    Thread mythread;//
+    Thread mythread;
 
     int NumOfSqr = 5;//number of square
     Rectangle sqr[] = new Rectangle[NumOfSqr];//to make a square
@@ -45,6 +45,12 @@ class DrawingPanel extends JPanel implements Runnable {
     int ymovement[] = new int[NumOfSqr];//to make it move along y axis
     int x[] = new int[NumOfSqr];//to make it move randomly along x axis
     int y[] = new int[NumOfSqr];//to make it move randomly along y axis
+
+    int countsHitSqrs = 0; // to count how many shaps have been hit so when it reaches number of squars we print win messge
+    boolean[] hitOrNot = new boolean[NumOfSqr]; // will change to true when shape at that index gets hit
+    private static String msg = "You WON !!!!!! "; // this messge will be shown when all shapes have been hit
+    private JPanel msgPanal = new JPanel();
+    private JTextField msgTextFild = new JTextField(50);
 
     private static final int polyW = 60;  //polygon-width
     private static final int polyH = 100; //polygon-height
@@ -68,12 +74,15 @@ class DrawingPanel extends JPanel implements Runnable {
     // constrctor to setup basic configurations of the panal
 
     public DrawingPanel(int FRAME_WIDTH, int FRAME_HEIGHT) {
-
+        int DM = 50;
         PANEL_WIDTH = FRAME_WIDTH;//frame width
         PANEL_HEIGHT = FRAME_HEIGHT;//frame height
+        msgPanal.setLayout(new FlowLayout());
+
         setLayout(new BorderLayout());//
-        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT)); // set width & height of panel
+        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT - DM)); // set width & height of panel
         this.setBackground(Color.black);//set the color of the panal
+
         mythread = new Thread(this);
         mythread.start();
         this.setFocusable(true);//if there is multi task with same function
@@ -96,28 +105,42 @@ class DrawingPanel extends JPanel implements Runnable {
 
     @Override
     public void paintComponent(Graphics g) {
+
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;//convert the graphics into 2d graphics
         g2.setStroke(new BasicStroke(5.0f));
         Polygon poly = new Polygon(xPoly, yPoly, xPoly.length);//to make a polygon
         Shape polyShape = poly;//to shape the polygone
         g2.setColor(Color.blue);//to set the color of polygon
+
+        g.setFont(new Font("Arial", Font.BOLD, 40));// set font for win messge 
+
+        msgPanal.setLayout(new FlowLayout());
+        msgPanal.add(msgTextFild);
+        msgPanal.setBackground(Color.black);
+        add(msgPanal, BorderLayout.NORTH);
+
         g2.fill(polyShape);//to fill the shape with color
+
         //to draw a point
         for (int i = 0; i < Xline.length; i++) {
             g2.setColor(Color.white);
             g2.drawLine(Xline[i], Yline[i], Xline[i], Yline[i]);
         }
+
         //to make the square stop when touch the polygon
         for (int i = 0; i < NumOfSqr; i++) {
             if (xPoly[2] > x[i] && xPoly[2] < x[i] + SW) {
                 if (yPoly[2] > y[i] && yPoly[2] < y[i] + SH) {
                     xmovement[i] = 0;
-                    ymovement[i] = 0;
+                    ymovement[i] = 0;// setting movemtn to 0 to make shape stop
+                    hitOrNot[i] = true;
                 }
             }
+
         }
-        g2.setColor(Color.green);//to set the color of square
+
+        g2.setColor(Color.green);//to set the color of square to red afetr getting hit 
         for (int i = 0; i < NumOfSqr; i++) {
             sqr[i] = new Rectangle(x[i], y[i], SW, SH);//to create a square
             g2.fill(sqr[i]);//to fill the shape
@@ -126,8 +149,21 @@ class DrawingPanel extends JPanel implements Runnable {
         for (int i = 0; i < NumOfSqr; i++) {
             if (xmovement[i] == 0 && ymovement[i] == 0) {// if movment is 0 means we have to chanenge its color to red becuse it stopped 
                 g2.fill(sqr[i]);//to fill the square with color
+
             }
         }
+
+        for (int i = 0; i < hitOrNot.length; i++) {
+            if (hitOrNot[i] == true) {
+                countsHitSqrs++;
+            }
+        }
+
+        if (countsHitSqrs == NumOfSqr - 1) {
+            g.setFont(new Font("Arial", Font.BOLD, 30));
+            g2.drawString(msg, 100, 140);
+        }
+
     }
 
     @Override
@@ -182,6 +218,9 @@ class DrawingPanel extends JPanel implements Runnable {
                 Yline[(counter) % 100] = yPoly[2];
                 counter++;
             }
+
+            msgTextFild.setText("shapes hit so far : " + countsHitSqrs + "/" + (NumOfSqr - 1));
+
             repaint();// repainting shapes after changes 
         }
     }
